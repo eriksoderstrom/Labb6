@@ -1,0 +1,8 @@
+﻿  Source.c
+c:\users\erik\documents\visual studio 2017\projects\inköpslista - dynamic memory från jobbdatan\inköpslista\source.c(54): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(136): note: see declaration of 'strcpy'
+c:\users\erik\documents\visual studio 2017\projects\inköpslista - dynamic memory från jobbdatan\inköpslista\source.c(55): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(136): note: see declaration of 'strcpy'
+c:\users\erik\documents\visual studio 2017\projects\inköpslista - dynamic memory från jobbdatan\inköpslista\source.c(93): warning C4013: 'chooseId' undefined; assuming extern returning int
+  InköpsLista.vcxproj -> C:\Users\erik\Documents\Visual Studio 2017\Projects\InköpsLista - Dynamic Memory från jobbdatan\Debug\InköpsLista.exe
+  InköpsLista.vcxproj -> C:\Users\erik\Documents\Visual Studio 2017\Projects\InköpsLista - Dynamic Memory från jobbdatan\Debug\InköpsLista.pdb (Partial PDB)
