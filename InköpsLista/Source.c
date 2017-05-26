@@ -35,6 +35,8 @@ typedef struct
 */
 void addToList(Matvara *mItem, int *index)
 {
+	
+	
 	/*
 	Variabler för 
 	*/
@@ -179,6 +181,37 @@ int chooseId(int length)
 
 
 /*
+	Saves our ShoppingList to a text file
+*/
+void saveList(Matvara *mList, int length)
+{
+	FILE * fileptr;
+
+	fileptr = fopen("shoppinglist.txt", "w");
+
+	if (fileptr == NULL)
+	{
+		printf("Couldn't create a file for saving the list.\n");
+		return;
+	}
+
+	fprintf(fileptr, "\n*****Shopping List*****");
+	fprintf(fileptr, "\n-----------------------\n");
+
+	for (int i = 0; i < length; i++)
+	{
+		fprintf(fileptr, "#%d  %s          %.1f%s\n", mList[i].id, mList[i].name, mList[i].amount, mList[i].unit);
+	}
+	fprintf(fileptr, "-----------------------\n\n");
+
+
+	printf("Created file with Shopping list.\n");
+	fclose(fileptr);
+}
+
+
+
+/*
 	Checks if we need to allocate, 
 	or reallocate memory for the list of "Matvara" in ShoppingList struct
 
@@ -242,7 +275,9 @@ int main(void)
 		printf("2 - Print shoppinglist\n");
 		printf("3 - Delete a item from the shoppinglist\n");
 		printf("4 - Change a item on the shoppinglist.\n");
-		printf("5 - Exit\n");
+		printf("5 - Save shopping list to file.\n");
+		printf("6 - Read shopping list from file.\n");
+		printf("7 - Exit\n");
 		printf("Please write your answer(1..5): ");
 		scanInt(&userAnswer);
 
@@ -264,6 +299,12 @@ int main(void)
 				changeItem(mList);
 				break;
 			case 5:
+				saveList(mList->varor, mList->length);
+				break;
+			case 6:
+				//exit = 1;
+				break;
+			case 7:
 				exit = 1;
 				break;
 			default:
