@@ -4,6 +4,10 @@
 #include "myInputManager.h"
 
 
+/*
+	Struct som innehåller parametrar för 
+	att beskriva en matvara
+*/
 typedef struct
 {
 	int id;
@@ -13,6 +17,11 @@ typedef struct
 } Matvara;
 
 
+/*
+	Struct som innehåller:
+	Lista av structen matvaror
+	Längden av listan av matvaror
+*/
 typedef struct
 {
 	int length;
@@ -20,8 +29,15 @@ typedef struct
 } ShoppingList;
 
 
+/*
+	Tar input från användaren, och lägger till den i 
+	i struct Matvara
+*/
 void addToList(Matvara *mItem, int *index)
 {
+	/*
+	Variabler för 
+	*/
 	char tempName[50], tempUnit[50];
 	float tempAmount = 0;
 	
@@ -114,22 +130,24 @@ void changeItem(ShoppingList *mShoppingList)
 void delFromList(ShoppingList *mShoppingList)
 {
 	int idToDel = 0;
-	int actualId = mShoppingList->varor[0].id;
 
 
 
-	printList(mShoppingList->varor, mShoppingList->length);
+	printList(mShoppingList->varor, mShoppingList->length);						// Printar listan innan vi frågar vilket item som ska tas bort
 	printf("Which item do you want to delete? Please input the items id: ");	
-	idToDel = chooseId(mShoppingList->length);									// Get input from user
+	idToDel = chooseId(mShoppingList->length);									// Funktionen som frågar användaren vilket id vi ska ändra/tas bort
+																				// används på flera ställen, och ligger därför i en egen funktion
 	
+	// Vi flyttar ner alla items i listan en plats, 
+	// så att id som användaren valt blir överskrivet
 	for (int i = idToDel; i < mShoppingList->length; i++)
 	{
 		mShoppingList->varor[i - 1] = mShoppingList->varor[i];					// Overwrite the item user choose to delete
 		mShoppingList->varor[i - 1].id = i;										// and move items downward
 	}
-	//free(*mShoppingList->varor[mShoppingList->length]);						// Free memory here??
-	mShoppingList->length --;													// Decrement length of list
-	
+
+	mShoppingList->length --;													// Minskar längden på listan
+		
 	printList(mShoppingList->varor, mShoppingList->length);
 	
 }
@@ -163,13 +181,21 @@ int chooseId(int length)
 /*
 	Checks if we need to allocate, 
 	or reallocate memory for the list of "Matvara" in ShoppingList struct
+
+	I denna funktion tar vi en "pointer" till "pointern" av matlistan, dvs. "Matvara **mList"
 */
 void defineList(Matvara **mList, int nrOfItems)
 {
 	int len = 0;
+
+	// Första gången kommer mList vara NULL,
+	// då vet vi att vi ska köra memory allocate(malloc)
 	if (*mList == NULL)
 	{
+		// Allokera plats i minnet för 1 struct Matvara
 		*mList = (Matvara*)malloc((nrOfItems + 1) * sizeof(Matvara));
+		
+		// Om mList returnar NULL så kunde vi inte allokera minne för listan
 		if (*mList == NULL)
 		{
 			printf("Could not allocate initial memory.\n");
@@ -179,9 +205,12 @@ void defineList(Matvara **mList, int nrOfItems)
 			printf("Allocated memory for first struct.\n");
 		}
 	}
+	// Om mList inte är NULL, så vet vi att vi måste
+	// reallokera minne för listan(realloc)
 	else
 	{
 		len = nrOfItems;
+		// När vi reallokerar minne, så allokerar vi dubbelt så mycket minne.
 		Matvara *tmp = realloc(*mList, (len * 2) * sizeof(Matvara));
 		if (tmp == NULL)
 		{
@@ -201,11 +230,11 @@ int main(void)
 	int exit = 0,  userAnswer = 0;
 
 
-	ShoppingList *mList = calloc(1, sizeof(ShoppingList));
-	mList->length = 0;
-	mList->varor = NULL;
-	int firstrun = 1;
-	int length = 0;
+	ShoppingList *mList = calloc(1, sizeof(ShoppingList));		// Allokera minne för en struct ShoppingList
+	mList->length = 0;											// Sätt längden till 0
+	mList->varor = NULL;										// Sätt listan till NULL
+
+
 	while (!exit)
 	{
 		printf("Welcome to the shopping list!\n");
