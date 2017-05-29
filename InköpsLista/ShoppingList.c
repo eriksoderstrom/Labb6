@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "ShoppingList.h"
 
 
@@ -12,11 +15,12 @@ void defineList(Matvara **mList, int nrOfItems)
 	int len = 0;
 
 	// Första gången kommer mList vara NULL,
+	// mList kommer också att vara NULL när vi läser in listan från en fil
 	// då vet vi att vi ska köra memory allocate(malloc)
 	if (*mList == NULL)
 	{
 		// Allokera plats i minnet för 1 struct Matvara
-		*mList = (Matvara*)malloc((nrOfItems + 1) * sizeof(Matvara));
+		*mList = malloc((nrOfItems + 1) * sizeof(Matvara));
 
 		// Om mList returnar NULL så kunde vi inte allokera minne för listan
 		if (*mList == NULL)
@@ -94,21 +98,13 @@ void addToList(ShoppingList *mShoppingList, int *index)
 
 	strcpy(mShoppingList->varor[*index].name, tempName);
 	strcpy(mShoppingList->varor[*index].unit, tempUnit);
+	
 	mShoppingList->varor[*index].amount = tempAmount;
 	mShoppingList->varor[*index].id = *index + 1;
 
 	// Increment length of list
 	*index += 1;
 
-	// Copy values to the item members
-	/*strcpy(mItem[*index].name, tempName);
-	strcpy(mItem[*index].unit, tempUnit);
-	mItem[*index].amount = tempAmount;
-	mItem[*index].id = *index + 1;
-
-	// Increment length of list
-	*index += 1;
-	*/
 }
 
 
@@ -182,7 +178,7 @@ void delFromList(ShoppingList *mShoppingList)
 	}
 
 	mShoppingList->length--;													// Minskar längden på listan
-
+	
 	defineList(&mShoppingList->varor, mShoppingList->length);					// Reallocate memory for less items
 	printList(mShoppingList->varor, mShoppingList->length);						// Print list again
 
@@ -220,8 +216,12 @@ Saves our ShoppingList to a text file
 void saveList(Matvara *mList, int length)
 {
 	FILE * fileptr;
+	char filename[50];
 
-	fileptr = fopen("shoppinglist.txt", "w");
+	printf("Please enter a filename: ");
+	scanString(filename, 50);
+	strcat(&filename, ".txt");
+	fileptr = fopen(filename, "w");
 
 	if (fileptr == NULL)
 	{
@@ -229,14 +229,10 @@ void saveList(Matvara *mList, int length)
 		return;
 	}
 
-	fprintf(fileptr, "\n*****Shopping List*****");
-	fprintf(fileptr, "\n-----------------------\n");
-
 	for (int i = 0; i < length; i++)
 	{
-		fprintf(fileptr, "#%d  %s          %.1f%s\n", mList[i].id, mList[i].name, mList[i].amount, mList[i].unit);
+		fprintf(fileptr, "%d\t%s\t%.1f\t%s\n\n",	 mList[i].id, mList[i].name, mList[i].amount, mList[i].unit);
 	}
-	fprintf(fileptr, "-----------------------\n\n");
 
 
 	printf("Created file with Shopping list.\n");
@@ -248,13 +244,45 @@ void readFromFile(ShoppingList *mList)
 
 	char filename[50];
 	FILE * fileptr;
+	char tempName[50], tempUnit[50];
+	float tempAmount;
+	int tempId;
 
-	free(mList->varor);		// First we free allocated memory
-	mList->varor = NULL;	// Set list to null to prevent garbage
+	Matvara tempVara;
+
+	int stage = 0;
+
+	int c = 0;
+
+	free(mList->varor);		// Först så frigör vi minnet för hela listan
+	mList->varor = NULL;	// Sätt list to null to prevent garbage
+	mList->length = 0;
 
 	printf("What's the name of the file?: ");
 	scanString(filename, 50);
+	strcat(&filename, ".txt");
+
+	fileptr = fopen(filename, "r");			// Open the file in read mode
+	if (fileptr == NULL)
+	{
+		return;
+	}
 
 
+	while (fscanf(fileptr, "%d%s%d%s", &tempId, tempName, &tempAmount, tempUnit) != EOF ) 
+	{
+
+		defineList(&mList->varor, mList->length);
+		mList->varor[mList->length].id = tempId;
+		mList->varor[mList->length].amount = tempId;
+
+		strcpy(mList->varor[mList->length].name, tempName);
+		strcpy(mList->varor[mList->length].unit, tempUnit);
+
+		mList->length += 1;
+	}
+	
+	fclose(fileptr);
+	printf("\n\n");
 
 }

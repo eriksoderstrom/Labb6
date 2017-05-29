@@ -1,3 +1,5 @@
+#ifndef ShoppingList_C
+#define ShoppingList_C
 
 typedef struct
 {
@@ -21,4 +23,5 @@ void delFromList(ShoppingList *mShoppingList);
 int chooseId(int length);
 void saveList(Matvara *mList, int length);
 void readFromFile(ShoppingList *mList);
+#endif // !ShoppingList
 

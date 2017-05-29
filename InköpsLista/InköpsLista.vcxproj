@@ -141,7 +141,7 @@
   <ItemGroup>
     <ClCompile Include="myInputManager.c" />
     <ClCompile Include="ShoppingList.c" />
-    <ClCompile Include="Source.c" />
+    <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="myInputManager.h" />
