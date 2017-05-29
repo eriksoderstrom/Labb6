@@ -1,34 +1,4 @@
-ï»¿#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "myInputManager.h"
 #include "ShoppingList.h"
-
-
-/*
-	Struct som innehÃ¥ller parametrar fÃ¶r 
-	att beskriva en matvara
-*/
-typedef struct
-{
-	int id;
-	float amount;
-	char unit[10];
-	char name[50];
-} Matvara;
-
-
-/*
-	Struct som innehÃ¥ller:
-	Lista av structen matvaror
-	LÃ¤ngden av listan av matvaror
-*/
-typedef struct
-{
-	int length;
-	Matvara* varor;
-} ShoppingList;
-
 
 
 /*
@@ -41,14 +11,14 @@ void defineList(Matvara **mList, int nrOfItems)
 {
 	int len = 0;
 
-	// FÃ¶rsta gÃ¥ngen kommer mList vara NULL,
-	// dÃ¥ vet vi att vi ska kÃ¶ra memory allocate(malloc)
+	// Första gången kommer mList vara NULL,
+	// då vet vi att vi ska köra memory allocate(malloc)
 	if (*mList == NULL)
 	{
-		// Allokera plats i minnet fÃ¶r 1 struct Matvara
+		// Allokera plats i minnet för 1 struct Matvara
 		*mList = (Matvara*)malloc((nrOfItems + 1) * sizeof(Matvara));
 
-		// Om mList returnar NULL sÃ¥ kunde vi inte allokera minne fÃ¶r listan
+		// Om mList returnar NULL så kunde vi inte allokera minne för listan
 		if (*mList == NULL)
 		{
 			printf("Could not allocate initial memory.\n");
@@ -58,8 +28,8 @@ void defineList(Matvara **mList, int nrOfItems)
 			printf("Allocated memory for first struct.\n");
 		}
 	}
-	// Om mList inte Ã¤r NULL, sÃ¥ vet vi att vi mÃ¥ste
-	// reallokera minne fÃ¶r listan(realloc)
+	// Om mList inte är NULL, så vet vi att vi måste
+	// reallokera minne för listan(realloc)
 	else
 	{
 		len = nrOfItems;
@@ -67,7 +37,7 @@ void defineList(Matvara **mList, int nrOfItems)
 		{
 			len = 1;
 		}
-		// NÃ¤r vi reallokerar minne, sÃ¥ allokerar vi dubbelt sÃ¥ mycket minne.
+		// När vi reallokerar minne, så allokerar vi dubbelt så mycket minne.
 		Matvara *tmp = realloc(*mList, (len * 2) * sizeof(Matvara));
 		if (tmp == NULL)
 		{
@@ -84,44 +54,44 @@ void defineList(Matvara **mList, int nrOfItems)
 
 
 /*
-	Tar input frÃ¥n anvÃ¤ndaren, och lÃ¤gger till den i 
-	i struct Matvara
+Tar input från användaren, och lägger till den i
+i struct Matvara
 */
 void addToList(ShoppingList *mShoppingList, int *index)
 {
-	
-	
+
+
 	/*
-	Variabler fÃ¶r 
+	Variabler för
 	*/
 	char tempName[50], tempUnit[50];
 	float tempAmount = 0;
-	
+
 	defineList(&mShoppingList->varor, *index);
 
 	for (int i = 0; i < 3; i++)
 	{
 		switch (i)
 		{
-			case 0:
-				printf("Whats the name of the food?: ");
-				scanString(tempName, 50);
-				break;
-			case 1:
-				printf("Whats the unit of the food?(L, grams, dl): ");
-				scanString(tempUnit, 50);
-				break;
-			case 2:
-				printf("What is the amount of food?: ");
-				if (!scanFloat(&tempAmount) || tempAmount < 0)
-				{
-					printf("That is not a valid amount\n");
-					i--;
-				}
-				break;
+		case 0:
+			printf("Whats the name of the food?: ");
+			scanString(tempName, 50);
+			break;
+		case 1:
+			printf("Whats the unit of the food?(L, grams, dl): ");
+			scanString(tempUnit, 50);
+			break;
+		case 2:
+			printf("What is the amount of food?: ");
+			if (!scanFloat(&tempAmount) || tempAmount < 0)
+			{
+				printf("That is not a valid amount\n");
+				i--;
+			}
+			break;
 		}
 	}
-	
+
 	strcpy(mShoppingList->varor[*index].name, tempName);
 	strcpy(mShoppingList->varor[*index].unit, tempUnit);
 	mShoppingList->varor[*index].amount = tempAmount;
@@ -129,7 +99,7 @@ void addToList(ShoppingList *mShoppingList, int *index)
 
 	// Increment length of list
 	*index += 1;
-	
+
 	// Copy values to the item members
 	/*strcpy(mItem[*index].name, tempName);
 	strcpy(mItem[*index].unit, tempUnit);
@@ -144,8 +114,8 @@ void addToList(ShoppingList *mShoppingList, int *index)
 
 
 /*
-	Prints out the entire list
-	
+Prints out the entire list
+
 */
 void printList(Matvara *list, int length)
 {
@@ -190,7 +160,7 @@ void changeItem(ShoppingList *mShoppingList)
 
 
 /*
-	Delete a item from the shopping list
+Delete a item from the shopping list
 */
 void delFromList(ShoppingList *mShoppingList)
 {
@@ -198,30 +168,30 @@ void delFromList(ShoppingList *mShoppingList)
 	int len = mShoppingList->length;
 
 
-	printList(mShoppingList->varor, mShoppingList->length);						// Printar listan innan vi frÃ¥gar vilket item som ska tas bort
-	printf("Which item do you want to delete? Please input the items id: ");	
-	idToDel = chooseId(mShoppingList->length);									// Funktionen som frÃ¥gar anvÃ¤ndaren vilket id vi ska Ã¤ndra/tas bort
-																				// anvÃ¤nds pÃ¥ flera stÃ¤llen, och ligger dÃ¤rfÃ¶r i en egen funktion
-	
-	// Vi flyttar ner alla items i listan en plats, 
-	// sÃ¥ att id som anvÃ¤ndaren valt blir Ã¶verskrivet
+	printList(mShoppingList->varor, mShoppingList->length);						// Printar listan innan vi frågar vilket item som ska tas bort
+	printf("Which item do you want to delete? Please input the items id: ");
+	idToDel = chooseId(mShoppingList->length);									// Funktionen som frågar användaren vilket id vi ska ändra/tas bort
+																				// används på flera ställen, och ligger därför i en egen funktion
+
+																				// Vi flyttar ner alla items i listan en plats, 
+																				// så att id som användaren valt blir överskrivet
 	for (int i = idToDel; i < mShoppingList->length; i++)
 	{
 		mShoppingList->varor[i - 1] = mShoppingList->varor[i];					// Overwrite the item user choose to delete
 		mShoppingList->varor[i - 1].id = i;										// and move items downward
 	}
 
-	mShoppingList->length --;													// Minskar lÃ¤ngden pÃ¥ listan
-	
+	mShoppingList->length--;													// Minskar längden på listan
+
 	defineList(&mShoppingList->varor, mShoppingList->length);					// Reallocate memory for less items
 	printList(mShoppingList->varor, mShoppingList->length);						// Print list again
-	
+
 }
 
 
 
 /*
-	Takes user input, and checks if input is in valid range
+Takes user input, and checks if input is in valid range
 */
 int chooseId(int length)
 {
@@ -245,7 +215,7 @@ int chooseId(int length)
 
 
 /*
-	Saves our ShoppingList to a text file
+Saves our ShoppingList to a text file
 */
 void saveList(Matvara *mList, int length)
 {
@@ -275,7 +245,7 @@ void saveList(Matvara *mList, int length)
 
 void readFromFile(ShoppingList *mList)
 {
-	
+
 	char filename[50];
 	FILE * fileptr;
 
@@ -287,61 +257,4 @@ void readFromFile(ShoppingList *mList)
 
 
 
-}
-
-
-
-int main(void)
-{
-	int exit = 0,  userAnswer = 0;
-
-
-	ShoppingList *mList = calloc(1, sizeof(ShoppingList));		// Allokera minne fÃ¶r en struct ShoppingList
-	mList->length = 0;											// SÃ¤tt lÃ¤ngden till 0
-	mList->varor = NULL;										// SÃ¤tt listan till NULL
-
-
-	while (!exit)
-	{
-		printf("Welcome to the shopping list!\n");
-		printf("1 - Add grocery\n");
-		printf("2 - Print shoppinglist\n");
-		printf("3 - Delete a item from the shoppinglist\n");
-		printf("4 - Change a item on the shoppinglist.\n");
-		printf("5 - Save shopping list to file.\n");
-		printf("6 - Read shopping list from file.\n");
-		printf("7 - Exit\n");
-		printf("Please write your answer(1..5): ");
-		scanInt(&userAnswer);
-
-
-		switch (userAnswer)
-		{
-			case 1:				
-				addToList(mList, &mList->length);	// Fill newly added "Matvara" with input from user
-				break;
-			case 2:
-				printList(mList->varor, mList->length);						// Print out the full list, in a nice format
-				break;
-			case 3:
-				delFromList(mList);
-				break;
-			case 4:
-				changeItem(mList);
-				break;
-			case 5:
-				saveList(mList->varor, mList->length);
-				break;
-			case 6:
-				readFromFile(mList);
-				break;
-			case 7:
-				exit = 1;
-				break;
-			default:
-				printf("I didn't understand that, please try again.\n");
-		} 
-	}
-	printf("Gooodbye!\n");
-	return 0;
 }
