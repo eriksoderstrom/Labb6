@@ -4,5 +4,6 @@ c:\users\erik\documents\visual studio 2017\projects\temp\labb6\inköpslista\sour
 c:\users\erik\documents\visual studio 2017\projects\temp\labb6\inköpslista\source.c(71): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(136): note: see declaration of 'strcpy'
 c:\users\erik\documents\visual studio 2017\projects\temp\labb6\inköpslista\source.c(109): warning C4013: 'chooseId' undefined; assuming extern returning int
+  LINK : C:\Users\Erik\Documents\Visual Studio 2017\Projects\temp\Labb6\Debug\InköpsLista.exe not found or not built by the last incremental link; performing full link
   InköpsLista.vcxproj -> C:\Users\Erik\Documents\Visual Studio 2017\Projects\temp\Labb6\Debug\InköpsLista.exe
   InköpsLista.vcxproj -> C:\Users\Erik\Documents\Visual Studio 2017\Projects\temp\Labb6\Debug\InköpsLista.pdb (Partial PDB)
