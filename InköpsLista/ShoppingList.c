@@ -229,30 +229,36 @@ void saveList(Matvara *mList, int length)
 		return;
 	}
 
+
+	// Först skriver vi längden på listan
+	// så att vi vet hur många rader vi ska läsa in i filen senare.
+	fprintf(fileptr, "%d\n", length);
+
+	// Skriv ut varje item i listan till filen
 	for (int i = 0; i < length; i++)
 	{
 		fprintf(fileptr, "%d\t%s\t%.1f\t%s\n\n",	 mList[i].id, mList[i].name, mList[i].amount, mList[i].unit);
 	}
 
 
-	printf("Created file with Shopping list.\n");
+	printf("Created file with Shopping list.\n\n\n");
 	fclose(fileptr);
 }
 
 void readFromFile(ShoppingList *mList)
 {
-
-	char filename[50];
+	
 	FILE * fileptr;
+	char filename[50];
+
+
+	// Temporära variabler
 	char tempName[50], tempUnit[50];
 	float tempAmount;
 	int tempId;
 
-	Matvara tempVara;
+	int nrOfItems = 0;		// Antal matvaror i listan, denna läses in först
 
-	int stage = 0;
-
-	int c = 0;
 
 	free(mList->varor);		// Först så frigör vi minnet för hela listan
 	mList->varor = NULL;	// Sätt list to null to prevent garbage
@@ -263,18 +269,30 @@ void readFromFile(ShoppingList *mList)
 	strcat(&filename, ".txt");
 
 	fileptr = fopen(filename, "r");			// Open the file in read mode
+
+
+	// Kolla om vi kunde öppna filen.
 	if (fileptr == NULL)
 	{
+		printf("Couldn't open file!\n");
 		return;
 	}
 
-
-	while (fscanf(fileptr, "%d%s%d%s", &tempId, tempName, &tempAmount, tempUnit) != EOF ) 
+	// Försök att läsa in längden på listan
+	// om detta inte går kan vi inte läsa in resten av listan.
+	if (fscanf(fileptr, "%d", &nrOfItems) != 1)
 	{
+		printf("Couldn't get length of shopping list\n");
+		return;
+	}
 
+	// Läs in alla matvaror som finns i den externa filen
+	for(int i = 0; i < nrOfItems; i ++)
+	{
+		fscanf(fileptr, "%d%s%f%s", &tempId, tempName, &tempAmount, tempUnit);
 		defineList(&mList->varor, mList->length);
 		mList->varor[mList->length].id = tempId;
-		mList->varor[mList->length].amount = tempId;
+		mList->varor[mList->length].amount = tempAmount;
 
 		strcpy(mList->varor[mList->length].name, tempName);
 		strcpy(mList->varor[mList->length].unit, tempUnit);
@@ -284,5 +302,8 @@ void readFromFile(ShoppingList *mList)
 	
 	fclose(fileptr);
 	printf("\n\n");
+
+	printf("New List:\n");
+	printList(mList->varor, nrOfItems);
 
 }
